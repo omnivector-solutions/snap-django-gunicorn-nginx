@@ -1,0 +1,78 @@
+name: django-gunicorn-nginx
+version: '0.1' 
+summary: django-gunicorn
+description: |
+  Django Example
+
+grade: stable
+confinement: classic
+
+apps:
+
+  django-gunicorn:
+    daemon: simple
+    plugs: [network-bind]
+    environment:
+      LC_ALL: C.UTF-8
+      LANG: C.UTF-8
+      PYTHONPATH: $SNAP/lib/python3.5/site-packages/
+      DJANGO_SECRETS_DIR: $SNAP_COMMON/django_secrets
+    command: wrappers/django-gunicorn
+
+  django-manage:
+    plugs: [network-bind]
+    environment:
+      LC_ALL: C.UTF-8
+      LANG: C.UTF-8
+      PYTHONPATH: $SNAP/lib/python3.5/site-packages/
+      DJANGO_SECRETS_DIR: $SNAP_COMMON/django_secrets
+    command: wrappers/django-manage
+
+  nginx:
+    daemon: simple
+    plugs: [network-bind]
+    environment:
+      LC_ALL: C.UTF-8
+      LANG: C.UTF-8
+    command: wrappers/nginx-run
+    reload-command: wrappers/nginx-reload
+
+
+parts:
+
+  django-gunicorn:
+    plugin: python
+    source: .
+    python-version: python3
+    requirements: requirements.txt
+    stage-packages: [libpq-dev,libssl-dev]
+    prime:
+      - -.venv
+    install: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/django-app
+      python3 ./manage.py collectstatic --no-input
+      cp -r ./* $SNAPCRAFT_PART_INSTALL/django-app/
+
+  wrappers:
+    # Build after django-gunicorn for debugging purposes.
+    # We want django-gunicorn to fail first in dev so we don't have
+    # to wait on these parts to complete before we know what has gone wrong.
+    # the after clause/stanza below can be remove in prod and/or once the nginx
+    # snap is decoupled from this one
+    after: [django-gunicorn]
+    plugin: dump
+    source: snap/wrap/
+
+  nginx:
+    # Build after django-gunicorn for debugging purposes.
+    # We want django-gunicorn to fail first in dev so we don't have
+    # to wait on these parts to complete before we know what has gone wrong.
+    # the after clause/stanza below can be remove in prod and/or once the nginx
+    # snap is decoupled from this one
+    after: [django-gunicorn]
+    plugin: nginx
+    source: snap/templates/
+    install: |
+      rm $SNAPCRAFT_PART_INSTALL/nginx/conf/nginx.conf.default
+      rm $SNAPCRAFT_PART_INSTALL/nginx/conf/nginx.conf
+      mv ./nginx.conf.snap.template $SNAPCRAFT_PART_INSTALL/nginx/conf/nginx.conf

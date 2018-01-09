@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -eux
+
+# make logging dir
+mkdir -p ${SNAP_COMMON}/log
+mkdir -p ${SNAP_COMMON}/django_secrets
+chmod -R 777 $SNAP_COMMON/django_secrets
+
+# NGINX dirs
+mkdir -p $SNAP_COMMON/nginx/logs
+chmod -R 755 $SNAP_COMMON/nginx 
