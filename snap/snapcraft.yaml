@@ -1,11 +1,11 @@
 name: django-gunicorn-nginx
 version: '0.1' 
-summary: django-gunicorn
+summary: django-gunicorn-nginx
 description: |
-  Django Example
+  Django-Gunicorn-NGINX Example
 
 grade: stable
-confinement: classic
+confinement: strict
 
 apps:
 
