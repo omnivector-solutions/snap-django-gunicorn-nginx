@@ -5,7 +5,7 @@ description: |
   Django-Gunicorn-NGINX Example
 
 grade: stable
-confinement: strict
+confinement: classic
 
 apps:
 
