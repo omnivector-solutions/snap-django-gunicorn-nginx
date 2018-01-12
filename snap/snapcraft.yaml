@@ -54,10 +54,12 @@ parts:
       cp -r ./* $SNAPCRAFT_PART_INSTALL/django-app/
 
   wrappers:
+    after: [django-gunicorn]
     plugin: dump
     source: snap/wrap/
 
   nginx:
+    after: [django-gunicorn]
     plugin: nginx
     source: snap/templates/
     install: |

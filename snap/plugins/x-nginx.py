@@ -166,7 +166,7 @@ class NginxPlugin(BasePlugin):
     def _pcre_install(self, builddir):
         self._pcre_tar.provision(
             builddir, clean_target=False, keep_tarball=True)
-        self.run(['./configure'], cwd=builddir)
+        self.run(['./configure', '--prefix={}'.format(self.partdir)], cwd=builddir)
         self.run(['make', '-j{}'.format(self.parallel_build_count)],
                  cwd=builddir)
         self.run(['make', 'install'], cwd=builddir)
@@ -174,7 +174,7 @@ class NginxPlugin(BasePlugin):
     def _zlib_install(self, builddir):
         self._zlib_tar.provision(
             builddir, clean_target=False, keep_tarball=True)
-        self.run(['./configure'], cwd=builddir)
+        self.run(['./configure', '--prefix={}'.format(self.partdir)], cwd=builddir)
         self.run(['make', '-j{}'.format(self.parallel_build_count)],
                  cwd=builddir)
         self.run(['make', 'install'], cwd=builddir)
@@ -182,7 +182,7 @@ class NginxPlugin(BasePlugin):
     def _openssl_install(self, builddir):
         self._openssl_tar.provision(
             builddir, clean_target=False, keep_tarball=True)
-        self.run(['./config', '--prefix=/'], cwd=builddir)
+        self.run(['./config', '--prefix={}'.format(self.partdir)], cwd=builddir)
         self.run(['make', '-j{}'.format(self.parallel_build_count)],
                  cwd=builddir)
         self.run(['make', 'install'], cwd=builddir)
@@ -203,7 +203,7 @@ class NginxPlugin(BasePlugin):
                '--with-zlib={}'.format(self._zlib_part_dir),
                '--with-openssl={}'.format(self._openssl_part_dir),
                '--with-http_gzip_static_module',
-               '--with-stream']
+               '--with-stream', '--prefix={}'.format(self.partdir)]
         if self.options.use_passenger:
             cmd.append('--add-module={}'.format(os.path.join(
                 self._passenger_part_dir, 'src', 'nginx_module')))
