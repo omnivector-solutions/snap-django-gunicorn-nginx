@@ -23,7 +23,7 @@ http {
     keepalive_timeout 30;
 
     location /static/ {
-        root /snap/django-gunicorn-nginx/current/django-app;
+        root /snap/django-gunicorn-nginx/current/django_app;
     }
 
     location / {

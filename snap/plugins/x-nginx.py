@@ -51,11 +51,11 @@ class NginxPlugin(BasePlugin):
 
         schema['properties']['nginx-version'] = {
             'type': 'string',
-            'default': '1.12.2'
+            'default': '1.14.0'
         }
         schema['properties']['pcre-version'] = {
             'type': 'string',
-            'default': '8.41'
+            'default': '8.42'
         }
         schema['properties']['zlib-version'] = {
             'type': 'string',
@@ -63,7 +63,7 @@ class NginxPlugin(BasePlugin):
         }
         schema['properties']['openssl-version'] = {
             'type': 'string',
-            'default': '1.1.0g'
+            'default': '1.1.0h'
         }
         schema['properties']['use-passenger'] = {
             'type': 'boolean',

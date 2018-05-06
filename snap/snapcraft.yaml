@@ -15,7 +15,7 @@ apps:
     environment:
       LC_ALL: C.UTF-8
       LANG: C.UTF-8
-      PYTHONPATH: $SNAP/lib/python3.5/site-packages/
+      PYTHONPATH: $SNAP/lib/python3.6/site-packages/
       DJANGO_SECRETS_DIR: $SNAP_COMMON/django_secrets
     command: wrappers/django-gunicorn
 
@@ -24,7 +24,7 @@ apps:
     environment:
       LC_ALL: C.UTF-8
       LANG: C.UTF-8
-      PYTHONPATH: $SNAP/lib/python3.5/site-packages/
+      PYTHONPATH: $SNAP/lib/python3.6/site-packages/
       DJANGO_SECRETS_DIR: $SNAP_COMMON/django_secrets
     command: wrappers/django-manage
 
@@ -44,25 +44,41 @@ parts:
     plugin: python
     source: .
     python-version: python3
-    requirements: requirements.txt
-    stage-packages: [libpq-dev,libssl-dev]
+    requirements: requirements/requirements.txt
+    stage-packages:
+      - libpq-dev
+      - libssl-dev
+      - libjpeg-dev
+      - libc6-dev
+      - libc6
+    build-packages:
+      - libc6-dev
+      - libc6
     prime:
       - -.venv
-    install: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/django-app
-      python3 ./manage.py collectstatic --no-input
-      cp -r ./* $SNAPCRAFT_PART_INSTALL/django-app/
+      - -venv
+      - -env
+      - -opstation.db.sqlite3
+    override-build: |
+      snapcraftctl build
+      mkdir -p $SNAPCRAFT_PART_INSTALL/django_app
+      python3.6 ./manage.py collectstatic --no-input
+      cp -r ./* $SNAPCRAFT_PART_INSTALL/django_app/
 
   wrappers:
-    after: [django-gunicorn]
     plugin: dump
     source: snap/wrap/
 
   nginx:
-    after: [django-gunicorn]
     plugin: nginx
     source: snap/templates/
-    install: |
+    stage-packages:
+      - libc6-dev
+      - libc6
+    build-packages:
+      - libc6-dev
+      - libc6
+    override-build: |
       rm $SNAPCRAFT_PART_INSTALL/nginx/conf/nginx.conf.default
       rm $SNAPCRAFT_PART_INSTALL/nginx/conf/nginx.conf
       mv ./nginx.conf.snap.template $SNAPCRAFT_PART_INSTALL/nginx/conf/nginx.conf
