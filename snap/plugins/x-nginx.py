@@ -93,8 +93,8 @@ class NginxPlugin(BasePlugin):
 
         # PCRE 
         self._pcre_download_url = \
-            'https://sourceforge.net/projects/pcre/files/pcre/{}/pcre-{}.tar.gz/download'.format(
-                self.options.pcre_version, self.options.pcre_version)
+            'https://svwh.dl.sourceforge.net/project/pcre/pcre/{0}/pcre-{0}.tar.gz'.format(
+                self.options.pcre_version)
         self._pcre_part_dir = os.path.join(self.partdir, 'pcre')
         self._pcre_tar = Tar(self._pcre_download_url, self._pcre_part_dir)
 
