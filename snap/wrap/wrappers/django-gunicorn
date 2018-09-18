@@ -2,7 +2,7 @@
 
 set -e
 
-exec "$SNAP/bin/gunicorn" --chdir "$SNAP/django-app" \
+exec "$SNAP/bin/gunicorn" --chdir "$SNAP/django_app" \
     --bind unix:/tmp/django-gunicorn.sock myproj.wsgi \
     --error-logfile "$SNAP_COMMON/log/gunicorn-error.log" \
     --access-logfile "$SNAP_COMMON/log/gunicorn-access.log" "$@"

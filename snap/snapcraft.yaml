@@ -58,7 +58,6 @@ parts:
       - -.venv
       - -venv
       - -env
-      - -opstation.db.sqlite3
     override-build: |
       snapcraftctl build
       mkdir -p $SNAPCRAFT_PART_INSTALL/django_app
