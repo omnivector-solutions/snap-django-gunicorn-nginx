@@ -63,7 +63,7 @@ class NginxPlugin(BasePlugin):
         }
         schema['properties']['openssl-version'] = {
             'type': 'string',
-            'default': '1.1.0h'
+            'default': '1.1.1'
         }
         schema['properties']['use-passenger'] = {
             'type': 'boolean',
@@ -93,8 +93,8 @@ class NginxPlugin(BasePlugin):
 
         # PCRE 
         self._pcre_download_url = \
-            'https://svwh.dl.sourceforge.net/project/pcre/pcre/{0}/pcre-{0}.tar.gz'.format(
-                self.options.pcre_version)
+            'https://sourceforge.net/projects/pcre/files/pcre/{}/pcre-{}.tar.gz/download'.format(
+                self.options.pcre_version, self.options.pcre_version)
         self._pcre_part_dir = os.path.join(self.partdir, 'pcre')
         self._pcre_tar = Tar(self._pcre_download_url, self._pcre_part_dir)
 
@@ -203,6 +203,7 @@ class NginxPlugin(BasePlugin):
                '--with-zlib={}'.format(self._zlib_part_dir),
                '--with-openssl={}'.format(self._openssl_part_dir),
                '--with-http_gzip_static_module',
+               '--with-http_realip_module',
                '--with-stream', '--prefix={}'.format(self.partdir)]
         if self.options.use_passenger:
             cmd.append('--add-module={}'.format(os.path.join(
